@@ -60,7 +60,7 @@ class LinearRegression:
         tss = np.sum((self.dependent_data - self.mean_y )**2)
         r_square = 1 - (squared_error/tss)
 
-        x_shape = x.ndim
+        x_shape = self.independent_data.ndim
 
         adjusted_r_square = 1 - ((1 - r_square)/(self.n_data_points - x_shape - 1)) * (self.n_data_points - 1)
 
@@ -104,15 +104,6 @@ class LinearRegression:
 
 
 
-
-x = np.linspace(0, 150, 200)
-y = 0.72 * x + 7
-noise = np.random.normal(0, 6, x.shape)
-y = y + noise
-ln = LinearRegression(x, y)
-ln.plot_line()
-ln.print_metrics()
-ln.plot_diagnostics()
 
 
 
