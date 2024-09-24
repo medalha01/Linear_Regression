@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.stats as stats
 
 
 class LinearRegression:
@@ -30,6 +31,7 @@ class LinearRegression:
         print("B0: %.2f and B1: %.2f" % (self.intercept, self.slope))
 
         self.predicted_y = self.intercept + self.slope * self.independent_data
+        self.residuals = self.dependent_data - self.predicted_y
 
     def result(self):
         return self.intercept, self.slope
@@ -70,6 +72,35 @@ class LinearRegression:
         print(f"R2: {r_square}")
         print(f"Adjusted R2: {adjusted_r_square}")
 
+    def plot_diagnostics(self):
+        # 1. Residuals vs Fitted (for homoscedasticity)
+        plt.scatter(self.predicted_y, self.residuals, color="blue", edgecolor='k')
+        plt.axhline(y=0, color='r', linestyle='--')
+        plt.xlabel('Fitted values')
+        plt.ylabel('Residuals')
+        plt.title("Residuals vs Fitted Values")
+        plt.show()
+
+        # 2. Normal Q-Q plot
+        stats.probplot(self.residuals, dist="norm", plot=plt)
+        plt.title("Normal Q-Q Plot")
+        plt.show()
+
+        # 3. Histogram of Residuals
+        plt.hist(self.residuals, bins=20, edgecolor='black')
+        plt.xlabel('Residuals')
+        plt.ylabel('Frequency')
+        plt.title('Histogram of Residuals')
+        plt.show()
+
+        # 4. Residuals vs Leverage Plot (to detect influential points)
+        leverage = (self.independent_data - self.mean_x) ** 2 / np.sum((self.independent_data - self.mean_x) ** 2)
+        plt.scatter(leverage, self.residuals, color="blue", edgecolor='k')
+        plt.axhline(y=0, color='r', linestyle='--')
+        plt.xlabel('Leverage')
+        plt.ylabel('Residuals')
+        plt.title('Residuals vs Leverage')
+        plt.show()
 
 
 
@@ -81,6 +112,7 @@ y = y + noise
 ln = LinearRegression(x, y)
 ln.plot_line()
 ln.print_metrics()
+ln.plot_diagnostics()
 
 
 
